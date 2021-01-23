@@ -30,6 +30,11 @@ class RecipeService {
 	private $db;
 	private $il10n;
 	private $logger;
+	
+	/**
+	 * @var HtmlDownloadService
+	 */
+	private $htmlDownloadService;
 
 	/**
 	 * @var UserConfigHelper
@@ -48,7 +53,8 @@ class RecipeService {
 			UserConfigHelper $userConfigHelper,
 			ImageService $imageService,
 			IL10N $il10n,
-			LoggerInterface $logger
+			LoggerInterface $logger,
+			HtmlDownloadService $downloadService
 		) {
 		$this->user_id = $UserId;
 		$this->root = $root;
@@ -57,6 +63,7 @@ class RecipeService {
 		$this->logger = $logger;
 		$this->userConfigHelper = $userConfigHelper;
 		$this->imageService = $imageService;
+		$this->htmlDownloadService = $downloadService;
 	}
 
 	/**
@@ -801,27 +808,11 @@ class RecipeService {
 	 * @return File
 	 */
 	public function downloadRecipe($url) {
-		$host = parse_url($url);
-
-		if (!$host) {
-			throw new Exception('Could not parse URL');
-		}
-
-		$opts = [
-			"http" => [
-				"method" => "GET",
-				"header" => "User-Agent: Nextcloud Cookbook App"
-			]
-		];
-
-		$context = stream_context_create($opts);
-
-		$html = file_get_contents($url, false, $context);
-
-		if (!$html) {
-			throw new Exception('Could not fetch site ' . $url);
-		}
-
+		$this->htmlDownloadService->downloadRecipe($url);
+		
+		// FIXME this is no terminal solution.
+		$html = $this->htmlDownloadService->getHtml();
+		
 		$json = $this->parseRecipeHtml($url, $html);
 
 		if (!$json) {
