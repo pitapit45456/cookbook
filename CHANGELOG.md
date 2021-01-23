@@ -3,6 +3,8 @@
 ### Added
 - Add IDE configuration to codebase to prevent small issues
   [#978](https://github.com/nextcloud/cookbook/pull/978) @christianlupus
+- Create service class for downloading and extracting JSON
+  [#553](https://github.com/nextcloud/cookbook/pull/553) @christianlupus
 
 ### Fixed
 - Refactor the code for image handling to make it testable
@@ -29,6 +31,9 @@
   [#957](https://github.com/nextcloud/cookbook/pull/957) @zorglubu
 - Add example to OpenAPI specification
   [#957](https://github.com/nextcloud/cookbook/pull/972) @christianlupus
+
+### Deprecated
+- Method RecipeService::parseRecipeHtml()
 
 
 ## 0.9.11 - 2022-03-28
